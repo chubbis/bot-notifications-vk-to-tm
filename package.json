@@ -1,0 +1,23 @@
+{
+  "name": "open-groups-vk-info",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chubbis/open-groups-vk-info.git"
+  },
+  "author": "Kirill Spasenov https://github.com/chubbis",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/chubbis/open-groups-vk-info/issues"
+  },
+  "homepage": "https://github.com/chubbis/open-groups-vk-info#readme",
+  "dependencies": {
+    "axios": "^0.20.0",
+    "telegraf": "^3.38.0"
+  }
+}
