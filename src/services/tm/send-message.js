@@ -17,8 +17,9 @@ const sendMediaGroupMessage = (user, text, media) => {
     tm.sendMediaGroup(user.chatId, media).then(() => sendTextMessage(user, text)).catch(e => console.log(e));
 };
 
-const prepareMessage = (text, media = []) => {
-    const users = getUsers();
+const prepareMessage = (chatId, text, media = []) => {
+    const users = chatId ? [getUsers().find(user => user.chatId === chatId)] : getUsers();
+    console.log(users);
     const mediaAttachments = [];
 
     media.map(el => {

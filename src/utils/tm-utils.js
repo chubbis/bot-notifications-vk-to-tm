@@ -1,6 +1,6 @@
 const { prepareMessage } = require('../services/tm/send-message');
 
-const wallPost = (newPost) => {
+const wallPost = (chatId, newPost) => {
     let { text, attachments } = newPost;
     const media = [];
 
@@ -11,7 +11,7 @@ const wallPost = (newPost) => {
         });
     }
 
-    prepareMessage(text, media);
+    prepareMessage(chatId, text, media);
 };
 
 const prepareVerifyCode = () => {

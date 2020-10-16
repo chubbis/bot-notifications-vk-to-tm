@@ -27,7 +27,7 @@ const checkUpdateMessage = (ctx, isNeedAuthorize, texts) => {
 
         getLastPost().then(lastPost => {
             if (lastPost) {
-                wallPost(lastPost);
+                wallPost(chatId, lastPost);
             } else {
                 ctx.reply('На стене нет записей, либо они недоступны');
             }
@@ -42,7 +42,7 @@ const checkUpdateMessage = (ctx, isNeedAuthorize, texts) => {
 
         getPinnedPost().then(pinnedPost => {
             if (pinnedPost) {
-                wallPost(pinnedPost);
+                wallPost(chatId, pinnedPost);
             } else {
                 ctx.reply('В сообществе нет закрепленной записей');
             }
