@@ -9,7 +9,7 @@ const checkUpdateMessage = (ctx, isNeedAuthorize, texts) => {
     const { message } = ctx.update;
     const chatId = message.chat.id;
     const sessionName = getSession(chatId, 'name');
-    const possibleSessions = ['/register', '/getLastPoll'];
+    const possibleSessions = ['/register', '/getLastPoll', '/setVkToken'];
 
     if (message.text === '/register') {
         if (sessionName) removeSession(chatId);
@@ -80,7 +80,7 @@ const checkUpdateMessage = (ctx, isNeedAuthorize, texts) => {
         if (sessionName) removeSession(chatId);
 
         const user = hasUserVkToken(chatId);
-
+        console.log(user);
         if (user) {
             checkVkToken(user.vkToken).then(({ data }) => {
                 if (data.error) {

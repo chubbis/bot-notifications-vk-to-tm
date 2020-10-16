@@ -1,6 +1,6 @@
 const axios = require('axios');
 const { vkToken, vkApiVersion, groupId, groupToken, secureCode } = require('../../../config');
-const { findPinnedPost, findLastPost } = require('../../utils/vk-utils');
+const { findPinnedPost, findLastPost, findPollPost } = require('../../utils/vk-utils');
 
 const getAllPosts = () => {
     return axios(`https://api.vk.com/method/wall.get?owner_id=-${groupId}&v=${vkApiVersion}&access_token=${vkToken}`)
@@ -16,7 +16,7 @@ const getPinnedPost = () => {
 };
 
 const getLastPostWithPoll = () => {
-    return getAllPosts().then(({ data }) => data.response.attachments.find(el => el.type === 'poll'));
+    return getAllPosts().then(data => findPollPost(data.response));
 };
 
 const getLongPollServer = (groupId, vkApiVersion, groupToken) => {

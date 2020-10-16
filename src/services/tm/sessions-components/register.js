@@ -29,7 +29,7 @@ const findVkId = (link) => {
     }
 };
 
-const firstStepHandler = (message, chatId, tm) => {
+const firstStepHandler = (message, chatId,) => {
     const notPreparedVkId = findVkId(message);
 
     if (notPreparedVkId) {
@@ -90,7 +90,7 @@ const registerApp = (chatId, sessionName, messageText, ctx) => {
 
                         setTimeout(() => {
                             clearInterval(checkAllow);
-                            tm.sendMessage(chatId, 'Разрешение на ')
+                            if (getSession(chatId, 'status') === 'secondStep') tm.sendMessage(chatId, 'Разрешение на получение сообщений не получено');
                         }, 120000);
                     }
                 } else {
@@ -106,7 +106,7 @@ const registerApp = (chatId, sessionName, messageText, ctx) => {
         if (verifyCode === messageText) {
             const users = getUsers();
             const vkId = getSession(chatId, 'registeringVkIds');
-            const tmUserId = message.from.id;
+            const tmUserId = ctx.update.message.from.id;
 
             const newUser = {
                 chatId,

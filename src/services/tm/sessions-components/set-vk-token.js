@@ -21,14 +21,13 @@ const setVkToken = (chatId, sessionName, messageText, ctx) => {
             if (currentUser) {
                 checkVkToken(token)
                     .then(({ data }) => {
-                        console.log(data.error.request_params);
+
                         if (data.error) {
                             ctx.reply('Токен недействителен. Попробуй создать токен ещё раз /setVkToken');
                         } else {
                             currentUser.vkToken = token;
                             currentUser.vkId = vkId;
-                            ctx.reply('Все прошло успешно. Можно голосовать в vk отсюда.\n' +
-                            'Для показа последнего голосования набери /getLastPoll');
+                            setUsers(ctx, users, 'setVkToken', chatId);
                         }
                     });
             }

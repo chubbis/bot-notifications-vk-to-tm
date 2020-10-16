@@ -11,20 +11,25 @@ const getUsers = () => {
 };
 
 const hasUserVkToken = (chatId) => {
-    return getUsers().find(el => el.chatId === chatId && el.VkToken);
+    return getUsers().find(el => el.chatId === chatId && el.vkToken);
 };
 
-const setUsers = (ctx, users, remove = '', chatId) => {
+const getUser = (chatId) => {
+    return users.find(user => user.chatId === chatId);
+};
+
+const setUsers = (ctx, users, setReason = '', chatId) => {
     fs.writeFile(pathToUsersJsonFile, JSON.stringify(users), err => {
         if (err) {
             console.log(new Date(), err);
         } else {
-            if (remove === 'remove') {
+            if (setReason === 'remove') {
                 ctx.reply(texts.registerInfo.successUnsubscribe);
-            } else if (remove === 'leavedGroup') {
+            } else if (setReason === 'leavedGroup') {
                 tm.sendMessage(chatId, 'Вы больше не можете получать обновления, т.к. покинули группу');
-            } else if (remove === 'setVkToken'){
-                ctx.reply('Токен вк успешно добавлен.')
+            } else if (setReason === 'setVkToken'){
+                ctx.reply('Все прошло успешно. Можно голосовать в vk отсюда.\n' +
+                    'Для показа последнего голосования набери /getLastPoll')
             } else {
                 ctx.reply(texts.registerInfo.successSubscribe);
             }
@@ -34,6 +39,7 @@ const setUsers = (ctx, users, remove = '', chatId) => {
 
 module.exports = {
     getUsers,
+    getUser,
     setUsers,
     hasUserVkToken,
 };
