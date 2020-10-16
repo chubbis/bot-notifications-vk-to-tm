@@ -4,6 +4,7 @@ const { subscribeUpdates } = require('./services/vk/long-poll');
 const { checkAuth, subscribe } = require('./services/authorization');
 const { replyMessage } = require('./services/tm/send-message');
 const { checkUpdateMessage } = require('./services/tm/check-update-message');
+const { checkCallbackQuery } = require('./services/tm/check-callback-query');
 const { removeSession, getSession } = require('./utils/sessions');
 
 const bot = new Telegraf(tmToken);
@@ -43,6 +44,10 @@ bot.on('text', ctx => {
     } else {
         replyMessage(ctx, texts.help.notAuth);
     }
+});
+
+bot.on('callback_query', ctx => {
+    checkCallbackQuery(ctx);
 });
 
 subscribeUpdates(groupId, vkApiVersion, groupToken);

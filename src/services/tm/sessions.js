@@ -9,10 +9,6 @@ const checkSessionName = (chatId, sessionName, message, ctx) => {
         registerApp(chatId, sessionName, messageText, ctx);
     }
 
-    if (sessionName === 'polling') {
-        pollingApp(chatId, messageText, ctx);
-    }
-
     if (sessionName === 'setVkToken') {
         setVkToken(chatId, sessionName, messageText, ctx);
     }

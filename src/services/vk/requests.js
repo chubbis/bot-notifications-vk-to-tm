@@ -47,6 +47,14 @@ const getPoll = (userToken, pollId) => {
     return axios(`https://api.vk.com/method/polls.getById?&v=${vkApiVersion}&access_token=${userToken}&owner_id=-${groupId}&poll_id=${pollId}`)
 };
 
+const deleteVote = (userToken, pollId, userAnswer) => {
+    return axios(`https://api.vk.com/method/polls.deleteVote?&v=${vkApiVersion}&access_token=${userToken}&owner_id=-${groupId}&poll_id=${pollId}&answer_id=${userAnswer}`);
+};
+
+const addVote = (userToken, pollId, userAnswer) => {
+    return axios(`https://api.vk.com/method/polls.deleteVote?&v=${vkApiVersion}&access_token=${userToken}&owner_id=-${groupId}&poll_id=${pollId}&answer_ids=${userAnswer}`);
+};
+
 const checkVkToken = (userVkToken) => {
     return axios(`https://api.vk.com/method/secure.checkToken?&v=${vkApiVersion}&access_token=${secureCode}&token=${userVkToken}`)
 };
@@ -63,4 +71,6 @@ module.exports = {
     getPoll,
     checkVkToken,
     getLastPostWithPoll,
+    deleteVote,
+    addVote,
 };

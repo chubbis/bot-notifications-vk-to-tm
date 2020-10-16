@@ -4,12 +4,13 @@ const { wallPost } = require('../../utils/tm-utils');
 const { getSession, removeSession, setSession } = require('../../utils/sessions');
 const { hasUserVkToken } = require('../../utils/users');
 const { checkSessionName } = require('./sessions');
+const { pollingApp } = require('./sessions-components/polling');
 
 const checkUpdateMessage = (ctx, isNeedAuthorize, texts) => {
     const { message } = ctx.update;
     const chatId = message.chat.id;
     const sessionName = getSession(chatId, 'name');
-    const possibleSessions = ['/register', '/getLastPoll', '/setVkToken'];
+    const possibleSessions = ['/register', '/setVkToken'];
 
     if (message.text === '/register') {
         if (sessionName) removeSession(chatId);
@@ -80,7 +81,7 @@ const checkUpdateMessage = (ctx, isNeedAuthorize, texts) => {
         if (sessionName) removeSession(chatId);
 
         const user = hasUserVkToken(chatId);
-        console.log(user);
+
         if (user) {
             checkVkToken(user.vkToken).then(({ data }) => {
                 if (data.error) {
@@ -88,8 +89,7 @@ const checkUpdateMessage = (ctx, isNeedAuthorize, texts) => {
                 }
 
                 if (data.response.success) {
-                    setSession(chatId, 'name','polling');
-                    checkSessionName(chatId, sessionName, message, ctx);
+                    pollingApp(chatId, ctx);
                 }
             });
         } else {
