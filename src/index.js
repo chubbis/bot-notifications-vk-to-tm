@@ -47,5 +47,5 @@ bot.on('text', ctx => {
 
 subscribeUpdates(groupId, vkApiVersion, groupToken);
 
-bot.launch().catch(e => console.log(e));
+bot.launch().catch(e => console.log(new Date(), e));
 

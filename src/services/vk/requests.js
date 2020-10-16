@@ -1,5 +1,5 @@
 const axios = require('axios');
-const { vkToken, vkApiVersion, groupId, groupToken } = require('../../../config');
+const { vkToken, vkApiVersion, groupId, groupToken, secureCode } = require('../../../config');
 const { findPinnedPost, findLastPost } = require('../../utils/vk-utils');
 
 const getAllPosts = () => {
@@ -13,6 +13,10 @@ const getLastPost = () => {
 
 const getPinnedPost = () => {
     return getAllPosts().then(data => findPinnedPost(data.response));
+};
+
+const getLastPostWithPoll = () => {
+    return getAllPosts().then(({ data }) => data.response.attachments.find(el => el.type === 'poll'));
 };
 
 const getLongPollServer = (groupId, vkApiVersion, groupToken) => {
@@ -39,6 +43,14 @@ const isMemberOfGroup = (vkId) => {
     return axios(`https://api.vk.com/method/groups.isMember?&v=${vkApiVersion}&access_token=${groupToken}&group_id=${groupId}&user_id=${vkId}`);
 };
 
+const getPoll = (userToken, pollId) => {
+    return axios(`https://api.vk.com/method/polls.getById?&v=${vkApiVersion}&access_token=${userToken}&owner_id=-${groupId}&poll_id=${pollId}`)
+};
+
+const checkVkToken = (userVkToken) => {
+    return axios(`https://api.vk.com/method/secure.checkToken?&v=${vkApiVersion}&access_token=${secureCode}&token=${userVkToken}`)
+};
+
 module.exports = {
     getLastPost,
     getLongPollServer,
@@ -48,4 +60,7 @@ module.exports = {
     isMessagesFromGroupAllowed,
     vkIdInInteger,
     isMemberOfGroup,
+    getPoll,
+    checkVkToken,
+    getLastPostWithPoll,
 };

@@ -22,7 +22,7 @@ const setSession = (chatId, sessionKey, sessionValue ) => {
 
     return fs.writeFile(pathToSessionsFile, JSON.stringify(sessions), err => {
         if (err) {
-            console.log(err);
+            console.log(new Date(), err);
         } else {
             return true;
         }

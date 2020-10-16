@@ -4,17 +4,17 @@ const { tmToken } = require('../../../config');
 const tm = new Telegram(tmToken);
 
 const sendTextMessage = (user, text) => {
-    tm.sendMessage(user.chatId, text).catch(e => console.log(e));
+    tm.sendMessage(user.chatId, text).catch(e => console.log(new Date(), e));
 };
 
 const sendMediaMessage = (user, text, media) => {
     if (media.type === 'video') text = `Посмотреть видео: ${media.videoUrl}\n${text}`;
 
-    tm.sendPhoto(user.chatId, media.media, {caption: text}).catch(e => console.log(e));
+    tm.sendPhoto(user.chatId, media.media, {caption: text}).catch(e => console.log(new Date(), e));
 };
 
 const sendMediaGroupMessage = (user, text, media) => {
-    tm.sendMediaGroup(user.chatId, media).then(() => sendTextMessage(user, text)).catch(e => console.log(e));
+    tm.sendMediaGroup(user.chatId, media).then(() => sendTextMessage(user, text)).catch(e => console.log(new Date(), e));
 };
 
 const prepareMessage = (text, media = []) => {
@@ -33,7 +33,7 @@ const prepareMessage = (text, media = []) => {
 };
 
 const replyMessage = (ctx, text) => {
-    ctx.reply(text).catch(e => console.log(e));
+    ctx.reply(text).catch(e => console.log(new Date(), e));
 };
 
 module.exports = {

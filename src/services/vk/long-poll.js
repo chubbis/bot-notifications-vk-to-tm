@@ -27,7 +27,7 @@ const subscribeUpdates = (groupId, vkApiVersion, groupToken) => {
                             });
                         }
                     })
-                    .catch(e => console.log(e));
+                    .catch(e => console.log(new Date(), e));
             }, 26000);
         });
 };
