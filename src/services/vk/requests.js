@@ -52,7 +52,7 @@ const deleteVote = (userToken, pollId, userAnswer) => {
 };
 
 const addVote = (userToken, pollId, userAnswer) => {
-    return axios(`https://api.vk.com/method/polls.deleteVote?&v=${vkApiVersion}&access_token=${userToken}&owner_id=-${groupId}&poll_id=${pollId}&answer_ids=${userAnswer}`);
+    return axios(`https://api.vk.com/method/polls.addVote?&v=${vkApiVersion}&access_token=${userToken}&owner_id=-${groupId}&poll_id=${pollId}&answer_ids=${userAnswer}`);
 };
 
 const checkVkToken = (userVkToken) => {

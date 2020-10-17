@@ -6,7 +6,7 @@ const checkCallbackQuery = (ctx) => {
     const [ queryType, pollId, answerId, userAnswerId ] = data.split('_');
 
     if (queryType === 'poll') {
-        checkVote(pollId, answerId, userAnswerId, message, id);
+        checkVote(ctx, pollId, answerId, +userAnswerId, message, id);
     }
 
 };

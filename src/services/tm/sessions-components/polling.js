@@ -1,12 +1,11 @@
-const Telegram = require('telegraf/telegram');
-const { tmToken } = require('../../../../config');
 const { getLastPostWithPoll, getPoll } = require('../../vk/requests');
 const { getUser } = require('../../../utils/users');
-const Extra = require('telegraf/extra');
 
-const tm = new Telegram(tmToken);
+const pollCbNotification = (text, ctx) => {
+    ctx.answerCbQuery(text).catch(err => console.log(new Date(), err));
+};
 
-const userPollResults = (user, pollId, ctx) => {
+const userPollResults = (user, pollId, ctx, messageId, replyType, cbNotificationText) => {
     const { vkToken } = user;
     getPoll(vkToken, pollId).then(({ data }) => {
         const poll = data.response;
@@ -20,13 +19,19 @@ const userPollResults = (user, pollId, ctx) => {
 
             if (userAnswerId === answer.id) text += ' (your vote)';
 
-            const callback_data = userAnswerId === answer.id ? `poll_${poll.id}_${answer.id}_${userAnswerId}` : `poll_${poll.id}_${answer.id}`;
+            const callback_data = `poll_${poll.id}_${answer.id}_${userAnswerId}`;
 
             reply_markup.inline_keyboard.push([{ text, callback_data }]);
         });
 
-        return ctx.reply(poll.question, { reply_markup });
-
+        if (replyType === 'change') {
+            ctx.editMessageText(poll.question, { reply_markup }).then(() => {
+                pollCbNotification(cbNotificationText, ctx);
+            })
+                .catch(err => console.log(new Date(), err));
+        } else {
+            return ctx.reply(poll.question, { reply_markup });
+        }
     });
 };
 
@@ -45,4 +50,6 @@ const pollingApp = (chatId, ctx) => {
 
 module.exports = {
     pollingApp,
+    pollCbNotification,
+    userPollResults,
 };

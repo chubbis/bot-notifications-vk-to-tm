@@ -1,4 +1,4 @@
-const { getUsers } = require('../../utils/users');
+const { getUsers, getUser } = require('../../utils/users');
 const Telegram = require('telegraf/telegram');
 const { tmToken } = require('../../../config');
 const tm = new Telegram(tmToken);
@@ -18,8 +18,8 @@ const sendMediaGroupMessage = (user, text, media) => {
 };
 
 const prepareMessage = (chatId, text, media = []) => {
-    const users = chatId ? [getUsers().find(user => user.chatId === chatId)] : getUsers();
-    console.log(users);
+    const users = chatId ? [getUser(chatId)] : getUsers();
+
     const mediaAttachments = [];
 
     media.map(el => {
