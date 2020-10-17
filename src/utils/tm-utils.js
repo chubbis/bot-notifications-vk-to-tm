@@ -1,17 +1,18 @@
 const { prepareMessage } = require('../services/tm/send-message');
 
-const wallPost = (chatId, newPost) => {
+const wallPost = (chatId, newPost, ctx) => {
     let { text, attachments } = newPost;
     const media = [];
+    let poll = null;
 
     if (attachments) {
         attachments.map(el => {
             if (el.type === 'photo' || el.type === 'video') media.push(makeMedia(el));
-            if (el.type === 'poll') text = makePollResults(el, text);
+            if (el.type === 'poll') poll = el.poll;
         });
     }
 
-    prepareMessage(chatId, text, media);
+    prepareMessage(chatId, text, media, poll, ctx);
 };
 
 const prepareVerifyCode = () => {
@@ -22,18 +23,6 @@ const prepareVerifyCode = () => {
     }
 
     return code;
-};
-
-const makePollResults = (item, text) => {
-    const { poll } = item;
-
-    text += `\nВсего голосов: ${poll.votes}\n${poll.question}`;
-
-    poll.answers.map(answer => {
-        text += `\n${answer.text} - ${answer.votes} (${answer.rate}%)`;
-    });
-
-    return text;
 };
 
 const makeMedia = (media) => {

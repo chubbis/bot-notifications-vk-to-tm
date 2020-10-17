@@ -1,6 +1,6 @@
 const axios = require('axios');
-const { vkToken, vkApiVersion, groupId, groupToken } = require('../../../config');
-const { findPinnedPost, findLastPost } = require('../../utils/vk-utils');
+const { vkToken, vkApiVersion, groupId, groupToken, secureCode } = require('../../../config');
+const { findPinnedPost, findLastPost, findPollPost } = require('../../utils/vk-utils');
 
 const getAllPosts = () => {
     return axios(`https://api.vk.com/method/wall.get?owner_id=-${groupId}&v=${vkApiVersion}&access_token=${vkToken}`)
@@ -13,6 +13,10 @@ const getLastPost = () => {
 
 const getPinnedPost = () => {
     return getAllPosts().then(data => findPinnedPost(data.response));
+};
+
+const getLastPostWithPoll = () => {
+    return getAllPosts().then(data => findPollPost(data.response));
 };
 
 const getLongPollServer = (groupId, vkApiVersion, groupToken) => {
@@ -39,6 +43,22 @@ const isMemberOfGroup = (vkId) => {
     return axios(`https://api.vk.com/method/groups.isMember?&v=${vkApiVersion}&access_token=${groupToken}&group_id=${groupId}&user_id=${vkId}`);
 };
 
+const getPoll = (userToken, pollId) => {
+    return axios(`https://api.vk.com/method/polls.getById?&v=${vkApiVersion}&access_token=${userToken}&owner_id=-${groupId}&poll_id=${pollId}`)
+};
+
+const deleteVote = (userToken, pollId, userAnswer) => {
+    return axios(`https://api.vk.com/method/polls.deleteVote?&v=${vkApiVersion}&access_token=${userToken}&owner_id=-${groupId}&poll_id=${pollId}&answer_id=${userAnswer}`);
+};
+
+const addVote = (userToken, pollId, userAnswer) => {
+    return axios(`https://api.vk.com/method/polls.addVote?&v=${vkApiVersion}&access_token=${userToken}&owner_id=-${groupId}&poll_id=${pollId}&answer_ids=${userAnswer}`);
+};
+
+const checkVkToken = (userVkToken) => {
+    return axios(`https://api.vk.com/method/secure.checkToken?&v=${vkApiVersion}&access_token=${secureCode}&token=${userVkToken}`)
+};
+
 module.exports = {
     getLastPost,
     getLongPollServer,
@@ -48,4 +68,9 @@ module.exports = {
     isMessagesFromGroupAllowed,
     vkIdInInteger,
     isMemberOfGroup,
+    getPoll,
+    checkVkToken,
+    getLastPostWithPoll,
+    deleteVote,
+    addVote,
 };

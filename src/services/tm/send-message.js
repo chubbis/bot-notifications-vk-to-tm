@@ -1,25 +1,26 @@
-const { getUsers } = require('../../utils/users');
+const { getUsers, getUser } = require('../../utils/users');
+const { userPollResults } = require('./sessions-components/polling');
 const Telegram = require('telegraf/telegram');
 const { tmToken } = require('../../../config');
 const tm = new Telegram(tmToken);
 
 const sendTextMessage = (user, text) => {
-    tm.sendMessage(user.chatId, text).catch(e => console.log(e));
+    tm.sendMessage(user.chatId, text).catch(e => console.log(new Date(), e));
 };
 
 const sendMediaMessage = (user, text, media) => {
     if (media.type === 'video') text = `Посмотреть видео: ${media.videoUrl}\n${text}`;
 
-    tm.sendPhoto(user.chatId, media.media, {caption: text}).catch(e => console.log(e));
+    tm.sendPhoto(user.chatId, media.media, {caption: text}).catch(e => console.log(new Date(), e));
 };
 
 const sendMediaGroupMessage = (user, text, media) => {
-    tm.sendMediaGroup(user.chatId, media).then(() => sendTextMessage(user, text)).catch(e => console.log(e));
+    tm.sendMediaGroup(user.chatId, media).then(() => sendTextMessage(user, text)).catch(e => console.log(new Date(), e));
 };
 
-const prepareMessage = (chatId, text, media = []) => {
-    const users = chatId ? [getUsers().find(user => user.chatId === chatId)] : getUsers();
-    console.log(users);
+const prepareMessage = (chatId, text, media = [], poll, ctx) => {
+    const users = chatId ? [getUser(chatId)] : getUsers();
+
     const mediaAttachments = [];
 
     media.map(el => {
@@ -30,11 +31,12 @@ const prepareMessage = (chatId, text, media = []) => {
         if (mediaAttachments.length > 1) sendMediaGroupMessage(user, text, mediaAttachments);
         if (mediaAttachments.length === 1) sendMediaMessage(user, text, media[0]);
         if (!mediaAttachments.length) sendTextMessage(user, text);
+        if (poll) userPollResults(user, poll.id, ctx);
     })
 };
 
 const replyMessage = (ctx, text) => {
-    ctx.reply(text).catch(e => console.log(e));
+    ctx.reply(text).catch(e => console.log(new Date(), e));
 };
 
 module.exports = {
