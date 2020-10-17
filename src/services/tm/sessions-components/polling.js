@@ -5,7 +5,7 @@ const pollCbNotification = (text, ctx) => {
     ctx.answerCbQuery(text).catch(err => console.log(new Date(), err));
 };
 
-const userPollResults = (user, pollId, ctx, messageId, replyType, cbNotificationText) => {
+const userPollResults = (user, pollId, ctx, replyType, cbNotificationText) => {
     const { vkToken } = user;
     getPoll(vkToken, pollId).then(({ data }) => {
         const poll = data.response;
@@ -15,7 +15,7 @@ const userPollResults = (user, pollId, ctx, messageId, replyType, cbNotification
 
         poll.answers.map(answer => {
             const userAnswerId = poll.answer_id;
-            let text = `'${answer.text}' - ${answer.votes} (${answer.rate})`;
+            let text = `'${answer.text}' - ${answer.votes} (${answer.rate} %)`;
 
             if (userAnswerId === answer.id) text += ' (your vote)';
 
@@ -24,13 +24,15 @@ const userPollResults = (user, pollId, ctx, messageId, replyType, cbNotification
             reply_markup.inline_keyboard.push([{ text, callback_data }]);
         });
 
+        const pollText = `Опрос.\n${poll.question}\nВсего голосов: ${poll.votes}`
+
         if (replyType === 'change') {
-            ctx.editMessageText(poll.question, { reply_markup }).then(() => {
+            ctx.editMessageText(pollText, { reply_markup }).then(() => {
                 pollCbNotification(cbNotificationText, ctx);
             })
                 .catch(err => console.log(new Date(), err));
         } else {
-            return ctx.reply(poll.question, { reply_markup });
+            return ctx.reply(pollText, { reply_markup });
         }
     });
 };

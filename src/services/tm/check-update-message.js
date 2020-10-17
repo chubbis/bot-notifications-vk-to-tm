@@ -29,7 +29,7 @@ const checkUpdateMessage = (ctx, isNeedAuthorize, texts) => {
 
         getLastPost().then(lastPost => {
             if (lastPost) {
-                wallPost(chatId, lastPost);
+                wallPost(chatId, lastPost, ctx);
             } else {
                 ctx.reply('На стене нет записей, либо они недоступны');
             }

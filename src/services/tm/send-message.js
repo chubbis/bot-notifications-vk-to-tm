@@ -1,4 +1,5 @@
 const { getUsers, getUser } = require('../../utils/users');
+const { userPollResults } = require('./sessions-components/polling');
 const Telegram = require('telegraf/telegram');
 const { tmToken } = require('../../../config');
 const tm = new Telegram(tmToken);
@@ -17,7 +18,7 @@ const sendMediaGroupMessage = (user, text, media) => {
     tm.sendMediaGroup(user.chatId, media).then(() => sendTextMessage(user, text)).catch(e => console.log(new Date(), e));
 };
 
-const prepareMessage = (chatId, text, media = []) => {
+const prepareMessage = (chatId, text, media = [], poll, ctx) => {
     const users = chatId ? [getUser(chatId)] : getUsers();
 
     const mediaAttachments = [];
@@ -30,6 +31,7 @@ const prepareMessage = (chatId, text, media = []) => {
         if (mediaAttachments.length > 1) sendMediaGroupMessage(user, text, mediaAttachments);
         if (mediaAttachments.length === 1) sendMediaMessage(user, text, media[0]);
         if (!mediaAttachments.length) sendTextMessage(user, text);
+        if (poll) userPollResults(user, poll.id, ctx);
     })
 };
 
