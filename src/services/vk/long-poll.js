@@ -14,7 +14,7 @@ const subscribeUpdates = (groupId, vkApiVersion, groupToken) => {
 
                         if (updates && updates.length) {
                             updates.map(el => {
-                                if (el.type === 'wall_post_new') wallPost(el.object);
+                                if (el.type === 'wall_post_new') wallPost('', el.object);
                                 if (el.type === 'group_leave') {
                                     const users = getUsers();
                                     const leavedUserIndex = users.findIndex(user => user.vkId === el.object.user_id);
