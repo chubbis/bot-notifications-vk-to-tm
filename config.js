@@ -5,7 +5,7 @@ const config = JSON.parse(Config);
 
 module.exports = {
     ...config,
-    vkApiVersion: "5.52",
+    vkApiVersion: '5.52',
     pathToUsersJsonFile: `${projectPath}/src/db/subscribed-users.json`,
     pathToSessionsFile: `${projectPath}/src/db/sessions.json`,
     texts: {
@@ -48,4 +48,5 @@ module.exports = {
         notAuthMessage: 'Команда доступна только зарегистрированным пользователям\n' +
             'Чтобы посмотреть список доступных команд, наберите /help',
     },
+    isNeedRestartLongPoll: true,
 };

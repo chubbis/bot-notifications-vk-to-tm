@@ -1,15 +1,16 @@
 const { getLongPollServer, getUpdates } = require('./requests');
 const { wallPost } = require('../../utils/tm-utils');
 const { getUsers, setUsers } = require('../../utils/users');
+let { isNeedRestartLongPoll } = require('../../../config');
 
 const subscribeUpdates = (groupId, vkApiVersion, groupToken) => {
     getLongPollServer(groupId, vkApiVersion, groupToken)
         .then(({ data }) => {
             let { server, key, ts } = data.response;
-            setInterval(() => {
+            const startListenLongPoll = setInterval(() => {
                 getUpdates(server, key, ts)
                     .then(({ data }) => {
-                        const { updates } = data;
+                        const { updates, failed } = data;
                         ts = data.ts;
 
                         if (updates && updates.length) {
@@ -25,6 +26,11 @@ const subscribeUpdates = (groupId, vkApiVersion, groupToken) => {
                                     }
                                 }
                             });
+                        }
+
+                        if (+failed > 1) {
+                            clearInterval(startListenLongPoll);
+                            isNeedRestartLongPoll = true;
                         }
                     })
                     .catch(e => console.log(new Date(), e));
