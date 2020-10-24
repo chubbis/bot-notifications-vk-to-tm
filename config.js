@@ -48,4 +48,5 @@ module.exports = {
         notAuthMessage: 'Команда доступна только зарегистрированным пользователям\n' +
             'Чтобы посмотреть список доступных команд, наберите /help',
     },
+    isNeedRestartLongPoll: true,
 };
