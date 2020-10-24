@@ -1,6 +1,6 @@
 const Telegraf = require('telegraf');
 const { groupToken, vkApiVersion, groupId, tmToken, isNeedAuthorize, texts } = require('../config');
-let { isNeedRestartLongPoll } = require('../config');
+const config = require('../config');
 const { subscribeUpdates } = require('./services/vk/long-poll');
 const { checkAuth, subscribe } = require('./services/authorization');
 const { replyMessage } = require('./services/tm/send-message');
@@ -52,9 +52,9 @@ bot.on('callback_query', ctx => {
 });
 
 setInterval(() => {
-    if (isNeedRestartLongPoll) {
+    if (config.isNeedRestartLongPoll) {
         subscribeUpdates(groupId, vkApiVersion, groupToken);
-        isNeedRestartLongPoll = false;
+        config.isNeedRestartLongPoll = false;
     }
 }, 26000);
 
